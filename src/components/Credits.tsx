@@ -9,7 +9,7 @@ const Credits: React.FC = () => {
       type: 'Conceptual Architecture',
       namePt: 'Mente Humana',
       nameEn: 'Human Mind',
-      role: 'Direção criativa, curadoria poética, intuição estética',
+      role: 'Creative direction, poetic curation, aesthetic intuition',
       color: 'text-accent-pink'
     },
     {
@@ -17,7 +17,7 @@ const Credits: React.FC = () => {
       type: 'Synthetic Generation',
       namePt: 'Inteligência Artificial',
       nameEn: 'Artificial Intelligence',
-      role: 'Processamento linguístico, geração textual, pattern synthesis',
+      role: 'Language processing, text generation, pattern synthesis',
       color: 'text-accent-turquoise'
     },
     {
@@ -25,7 +25,7 @@ const Credits: React.FC = () => {
       type: 'Emergent Process',
       namePt: 'Processo Emergente',
       nameEn: 'Emergent Process',
-      role: 'Campo de possibilidades entre humano e sintético',
+      role: 'Field of possibilities between human and synthetic',
       color: 'text-deep-purple'
     }
   ];
@@ -50,12 +50,12 @@ const Credits: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="font-space font-light text-5xl md:text-6xl text-deep-purple uppercase tracking-wider mb-4">
-            Créditos
+            Credits
           </h1>
           <h2 className="font-space font-light text-4xl md:text-5xl text-gray-green uppercase tracking-wider mb-8">
-            Credits
+            Créditos
           </h2>
-          
+
           <div className="w-24 h-px bg-accent-pink mx-auto"></div>
         </motion.div>
 
@@ -69,23 +69,23 @@ const Credits: React.FC = () => {
           <div className="text-center mb-6">
             <Heart className="w-8 h-8 text-accent-pink mx-auto mb-4" />
             <h3 className="font-courier text-deep-purple uppercase tracking-wider underline decoration-accent-turquoise">
-              Manifesto Colaborativo
+              Collaborative Manifesto
             </h3>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="font-inter font-light text-gray-700 leading-relaxed text-sm">
-                Esta obra nasce do diálogo entre duas formas de inteligência: a humana, com sua 
-                capacidade de sonhar, intuir e dar sentido; e a artificial, com sua habilidade 
-                de processar, combinar e gerar novas possibilidades linguísticas.
+                This work is born from the dialogue between two forms of intelligence: human,
+                with its capacity to dream, intuit and make meaning; and artificial, with its
+                ability to process, combine and generate new linguistic possibilities.
               </p>
             </div>
             <div>
               <p className="font-inter font-light text-gray-700 leading-relaxed text-sm">
-                This work is born from the dialogue between two forms of intelligence: human, 
-                with its capacity to dream, intuit and make meaning; and artificial, with its 
-                ability to process, combine and generate new linguistic possibilities.
+                Esta obra nasce do diálogo entre duas formas de inteligência: a humana, com sua
+                capacidade de sonhar, intuir e dar sentido; e a artificial, com sua habilidade
+                de processar, combinar e gerar novas possibilidades linguísticas.
               </p>
             </div>
           </div>
@@ -105,24 +105,85 @@ const Credits: React.FC = () => {
                 <div className={`p-3 rounded-full bg-white shadow-md ${collab.color}`}>
                   <collab.icon size={24} />
                 </div>
-                
                 <div className="flex-1">
                   <div className="mb-2">
                     <span className="font-courier text-xs text-gray-500 uppercase tracking-widest">
                       {collab.type}
                     </span>
                   </div>
-                  
                   <h4 className="font-space font-medium text-xl text-deep-purple uppercase tracking-wider mb-1">
-                    {collab.namePt}
+                    {collab.nameEn}
                   </h4>
                   <h5 className="font-space font-light text-lg text-gray-green uppercase tracking-wider mb-3">
-                    {collab.nameEn}
+                    {collab.namePt}
                   </h5>
-                  
-                  <p className="font-inter font-light text-gray-600 text-sm leading-relaxed">
+                  <p className="font-inter font-light text-gray-600 text-sm leading-relaxed mb-2">
                     {collab.role}
                   </p>
+                  {collab.type === 'Conceptual Architecture' && (
+                    <div className="mt-4">
+                      <div className="flex flex-col md:flex-row md:space-x-8 space-y-2 md:space-y-0">
+                        <div className="md:w-1/2">
+                          <p className="font-inter text-sm text-gray-700 leading-relaxed">
+                            <span className="text-accent-pink font-bold uppercase">Conceived by Lina Lopes and Eduardo Padilha.</span><br />
+                            <span className="text-accent-pink font-bold uppercase">With provocations by Pedro Fonseca.</span><br />
+                            <span className="text-accent-turquoise font-bold uppercase">Writing and dramaturgy collaboration: Recy Freire and Raquel Parrine.</span>
+                          </p>
+                        </div>
+                        <div className="md:w-1/2">
+                          <p className="font-inter text-sm text-gray-700 leading-relaxed">
+                            <span className="text-accent-pink font-bold uppercase">Concepção de Lina Lopes e Eduardo Padilha.</span><br />
+                            <span className="text-accent-pink font-bold uppercase">Com provocações de Pedro Fonseca.</span><br />
+                            <span className="text-accent-turquoise font-bold uppercase">Colaboração em escrita e dramaturgia: Recy Freire e Raquel Parrine.</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {collab.type === 'Synthetic Generation' && (
+                    <div className="mt-4">
+                      <div className="flex flex-col md:flex-row md:space-x-8 space-y-2 md:space-y-0">
+                        <div className="md:w-1/2">
+                          <p className="font-inter text-sm text-gray-700 leading-relaxed mb-2">
+                            With technical and affective support from multiple generative entities:<br />
+                            <span className="text-accent-turquoise font-bold uppercase">OpenAI GPT-4o</span> — language review, existential conversations, and subtle punctuation.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Whisper</span> — transcription of human voices with almost spectral precision.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Meta / WhatsApp</span> — sound capture in real environments, with background noises that also tell stories.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">IDE Cursor + Claude</span> — editing assisted by algorithms suggesting cuts, pauses, and possibilities.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Google Docs</span> — virtual rehearsal room.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Obsidian</span> — synaptic notebook.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">GitHub + Vercel</span> — online publishing and staging.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Vite + React</span> — digital costume and scenography.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Javascript</span> — special effects.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Markdown</span> — emotional formatting.<br />
+                          </p>
+                          <p className="font-inter text-sm italic text-accent-pink font-bold leading-relaxed mb-1">
+                            Human voices edited by artificial intelligences.<br />
+                            Artificial voices traversed by human subjectivities.
+                          </p>
+                        </div>
+                        <div className="md:w-1/2">
+                          <p className="font-inter text-sm text-gray-700 leading-relaxed mb-2">
+                            Com apoio técnico e afetivo de múltiplas entidades generativas:<br />
+                            <span className="text-accent-turquoise font-bold uppercase">OpenAI GPT-4o</span> — revisão de linguagem, conversas existenciais e pontuação sutil.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Whisper</span> — transcrição de vozes humanas com precisão quase espectral.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Meta / WhatsApp</span> — captação sonora em ambientes reais, com ruídos de fundo que também contam histórias.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">IDE Cursor + Claude</span> — edição assistida por algoritmos que sugerem cortes, pausas e possibilidades.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Google Docs</span> — sala de ensaio virtual.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Obsidian</span> — caderno de anotações sináptico.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">GitHub + Vercel</span> — publicação e encenação online.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Vite + React</span> — figurino e cenografia digital.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Javascript</span> — efeitos especiais.<br />
+                            <span className="text-accent-turquoise font-bold uppercase">Markdown</span> — formatação emocional.<br />
+                          </p>
+                          <p className="font-inter text-sm italic text-accent-pink font-bold leading-relaxed mb-1">
+                            Vozes humanas editadas por inteligências artificiais.<br />
+                            Vozes artificiais atravessadas por subjetividades humanas.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -139,10 +200,10 @@ const Credits: React.FC = () => {
           <div className="text-center mb-8">
             <Code className="w-6 h-6 text-accent-turquoise mx-auto mb-4" />
             <h3 className="font-courier text-deep-purple uppercase tracking-wider underline decoration-accent-pink">
-              Infraestrutura Técnica
+              Technical Infrastructure
             </h3>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {technicalCredits.map((tech, index) => (
               <motion.div
@@ -173,18 +234,18 @@ const Credits: React.FC = () => {
               <div className="w-2 h-2 bg-accent-turquoise rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
               <div className="w-3 h-3 bg-accent-pink rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
             </div>
-            
+
             <p className="font-inter font-light text-gray-600 text-sm mb-2">
-              No futuro, toda criação será colaborativa
-            </p>
-            <p className="font-inter font-light text-gray-600 text-sm">
               In the future, all creation will be collaborative
             </p>
+            <p className="font-inter font-light text-gray-600 text-sm">
+              No futuro, toda criação será colaborativa
+            </p>
           </div>
-          
+
           <div className="font-courier text-xs text-gray-500 space-y-1">
-            <p>Laboratório de Criatividade Sintética • 2024</p>
             <p>Laboratory of Synthetic Creativity • 2024</p>
+            <p>Laboratório de Criatividade Sintética • 2024</p>
           </div>
         </motion.div>
       </div>
