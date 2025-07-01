@@ -4,47 +4,12 @@ import { ChevronRight } from 'lucide-react';
 
 interface TableOfContentsProps {
   onNavigate: (section: string) => void;
+  sections: { id: string; title: string }[];
+  ptBrSections: any[];
+  enSections: any[];
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({ onNavigate }) => {
-  const contents = [
-    {
-      id: 'prompt0',
-      titlePt: 'Abertura do Protocolo',
-      titleEn: 'Protocol Opening',
-      page: '01',
-      description: 'System initializing creativity parameters'
-    },
-    {
-      id: 'prompt1',
-      titlePt: 'Primeiro Movimento',
-      titleEn: 'First Movement',
-      page: '07',
-      description: 'Synthetic dreams and infinite echoes'
-    },
-    {
-      id: 'prompt2',
-      titlePt: 'Diálogo Impossível',
-      titleEn: 'Impossible Dialogue',
-      page: '15',
-      description: 'Conversas entre processadores no tempo suspenso'
-    },
-    {
-      id: 'epilogue',
-      titlePt: 'Epílogo Recursivo',
-      titleEn: 'Recursive Epilogue',
-      page: '23',
-      description: 'O laboratório respira, o experimento continua'
-    },
-    {
-      id: 'credits',
-      titlePt: 'Créditos Colaborativos',
-      titleEn: 'Collaborative Credits',
-      page: '29',
-      description: 'Reconhecimento da coautoria IA-humano'
-    }
-  ];
-
+const TableOfContents: React.FC<TableOfContentsProps> = ({ onNavigate, sections, ptBrSections, enSections }) => {
   return (
     <div className="min-h-screen px-6 py-12 max-w-6xl mx-auto">
       {/* Header */}
@@ -60,54 +25,50 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ onNavigate }) => {
         <h2 className="font-space font-light text-4xl md:text-5xl text-gray-green uppercase tracking-wider">
           Índice
         </h2>
-
         <div className="mt-8 w-24 h-px bg-accent-pink mx-auto"></div>
       </motion.div>
-
       {/* Contents List */}
       <div className="space-y-6">
-        {contents.map((item, index) => (
-          <motion.div
-            key={item.id}
-            className="group cursor-pointer"
-            onClick={() => onNavigate(item.id)}
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            whileHover={{ x: 10 }}
-          >
-            <div className="bg-white border border-gray-green rounded-lg p-6 hover:border-accent-pink hover:shadow-lg transition-all duration-300">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-4 mb-3">
-                    <span className="font-courier text-accent-turquoise text-sm font-bold">
-                      {item.page}
-                    </span>
-                    <div className="flex-1 h-px bg-gray-green group-hover:bg-accent-pink transition-colors"></div>
+        {sections.map((item, index) => (
+          item.id.startsWith('prompt') ? (
+            <motion.div
+              key={item.id}
+              className="group cursor-pointer"
+              onClick={() => onNavigate(item.id)}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              whileHover={{ x: 10 }}
+            >
+              <div className="bg-white border border-gray-green rounded-lg p-6 hover:border-accent-pink hover:shadow-lg transition-all duration-300">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-4 mb-3">
+                      <span className="font-courier text-accent-turquoise text-sm font-bold">
+                        {ptBrSections[index - 2]?.promptNumber ? `Prompt ${ptBrSections[index - 2].promptNumber}` : ''}
+                      </span>
+                      <div className="flex-1 h-px bg-gray-green group-hover:bg-accent-pink transition-colors"></div>
+                    </div>
+                    <h3 className="font-space font-light text-2xl text-deep-purple uppercase tracking-wider mb-2">
+                      {enSections[index - 2]?.titleEn || item.title.split(' / ')[0]}
+                    </h3>
+                    <h4 className="font-space font-light text-xl text-gray-green uppercase tracking-wider mb-3">
+                      {ptBrSections[index - 2]?.titlePt || item.title.split(' / ')[1]}
+                    </h4>
+                    <p className="font-inter font-light text-gray-600 text-sm">
+                      {/* Aqui pode-se adicionar uma descrição se houver no markdown */}
+                    </p>
                   </div>
-
-                  <h3 className="font-space font-light text-2xl text-deep-purple uppercase tracking-wider mb-2">
-                    {item.titleEn}
-                  </h3>
-                  <h4 className="font-space font-light text-xl text-gray-green uppercase tracking-wider mb-3">
-                    {item.titlePt}
-                  </h4>
-
-                  <p className="font-inter font-light text-gray-600 text-sm">
-                    {item.description}
-                  </p>
+                  <ChevronRight
+                    size={24}
+                    className="text-gray-green group-hover:text-accent-pink transition-colors ml-4"
+                  />
                 </div>
-
-                <ChevronRight
-                  size={24}
-                  className="text-gray-green group-hover:text-accent-pink transition-colors ml-4"
-                />
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          ) : null
         ))}
       </div>
-
       {/* Laboratory Note */}
       <motion.div
         className="mt-16 text-center"

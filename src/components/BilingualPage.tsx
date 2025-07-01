@@ -1,30 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-interface DialogueContent {
-  speaker: string;
-  text: string;
-}
-
-interface LanguageContent {
-  rubric: string;
-  dialogue: DialogueContent;
-}
+import ReactMarkdown from 'react-markdown';
+import { PromptBlock } from '../utils/markdownParser';
 
 interface BilingualPageProps {
   promptNumber: string;
   titlePt: string;
   titleEn: string;
-  contentPt: LanguageContent;
-  contentEn: LanguageContent;
+  blocksPt: PromptBlock[];
+  blocksEn: PromptBlock[];
 }
+
+const markdownComponents = {
+  blockquote: ({node, ...props}: any) => (
+    <blockquote className="border-l-4 border-accent-pink pl-4 italic text-lg text-accent-pink bg-pink-50 my-4 py-2">
+      {props.children}
+    </blockquote>
+  )
+};
 
 const BilingualPage: React.FC<BilingualPageProps> = ({
   promptNumber,
   titlePt,
   titleEn,
-  contentPt,
-  contentEn
+  blocksPt,
+  blocksEn
 }) => {
   return (
     <div className="min-h-screen px-6 py-12">
@@ -61,27 +61,26 @@ const BilingualPage: React.FC<BilingualPageProps> = ({
               <h2 className="font-space font-light text-3xl md:text-4xl text-deep-purple uppercase tracking-wider mb-6">
                 {titleEn}
               </h2>
-
-              {/* Rubric */}
-              <div className="mb-8">
-                <p className="font-courier text-sm text-gray-green italic leading-relaxed border-l-2 border-gray-green pl-4 py-2">
-                  {contentEn.rubric}
-                </p>
-              </div>
-
-              {/* Dialogue */}
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4">
-                  <span className="font-courier font-bold text-accent-pink text-sm uppercase tracking-wider flex-shrink-0 mt-1">
-                    {contentEn.dialogue.speaker}:
-                  </span>
-                </div>
-                <p className="font-inter font-light text-lg text-deep-purple leading-relaxed ml-0 pl-4 border-l border-accent-pink">
-                  {contentEn.dialogue.text}
-                </p>
+              {/* Render blocksEn */}
+              <div className="space-y-8">
+                {blocksEn.map((block, idx) =>
+                  block.type === 'speech' ? (
+                    <div key={idx} className="flex items-start space-x-4">
+                      <span className="font-courier font-bold text-accent-pink text-sm uppercase tracking-wider flex-shrink-0 mt-1">
+                        {block.speaker}:
+                      </span>
+                      <div className="font-inter font-light text-lg text-deep-purple leading-relaxed ml-0 pl-4 border-l border-accent-pink fala-markdown space-y-4">
+                        <ReactMarkdown components={markdownComponents}>{block.text}</ReactMarkdown>
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={idx} className="font-courier text-sm text-gray-500 italic leading-relaxed border-l-2 border-gray-green pl-4 py-2">
+                      <ReactMarkdown components={markdownComponents}>{block.text}</ReactMarkdown>
+                    </div>
+                  )
+                )}
               </div>
             </div>
-
             {/* Visual Separator */}
             <div className="flex items-center space-x-4 my-8">
               <div className="w-8 h-px bg-accent-turquoise"></div>
@@ -101,27 +100,26 @@ const BilingualPage: React.FC<BilingualPageProps> = ({
               <h2 className="font-space font-light text-3xl md:text-4xl text-deep-purple uppercase tracking-wider mb-6">
                 {titlePt}
               </h2>
-
-              {/* Rubric */}
-              <div className="mb-8">
-                <p className="font-courier text-sm text-gray-green italic leading-relaxed border-l-2 border-gray-green pl-4 py-2">
-                  {contentPt.rubric}
-                </p>
-              </div>
-
-              {/* Dialogue */}
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4">
-                  <span className="font-courier font-bold text-accent-turquoise text-sm uppercase tracking-wider flex-shrink-0 mt-1">
-                    {contentPt.dialogue.speaker}:
-                  </span>
-                </div>
-                <p className="font-inter font-light text-lg text-deep-purple leading-relaxed ml-0 pl-4 border-l border-accent-turquoise">
-                  {contentPt.dialogue.text}
-                </p>
+              {/* Render blocksPt */}
+              <div className="space-y-8">
+                {blocksPt.map((block, idx) =>
+                  block.type === 'speech' ? (
+                    <div key={idx} className="flex items-start space-x-4">
+                      <span className="font-courier font-bold text-accent-turquoise text-sm uppercase tracking-wider flex-shrink-0 mt-1">
+                        {block.speaker}:
+                      </span>
+                      <div className="font-inter font-light text-lg text-deep-purple leading-relaxed ml-0 pl-4 border-l border-accent-turquoise fala-markdown space-y-4">
+                        <ReactMarkdown components={markdownComponents}>{block.text}</ReactMarkdown>
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={idx} className="font-courier text-sm text-gray-500 italic leading-relaxed border-l-2 border-gray-green pl-4 py-2">
+                      <ReactMarkdown components={markdownComponents}>{block.text}</ReactMarkdown>
+                    </div>
+                  )
+                )}
               </div>
             </div>
-
             {/* Visual Separator */}
             <div className="flex items-center space-x-4 my-8">
               <div className="w-8 h-px bg-accent-pink"></div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Cover from './components/Cover';
 import TableOfContents from './components/TableOfContents';
@@ -6,35 +6,59 @@ import BilingualPage from './components/BilingualPage';
 import VisualElements from './components/VisualElements';
 import Credits from './components/Credits';
 import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
-
-type Section = 'cover' | 'contents' | 'prompt0' | 'prompt1' | 'prompt2' | 'epilogue' | 'credits';
+import { parseMarkdownSections, PromptSection, splitPromptBlocks, PromptBlock } from './utils/markdownParser';
+// @ts-ignore
+import ptBrMarkdown from './content/pt-br.md?raw';
+// @ts-ignore
+import enMarkdown from './content/en.md?raw';
+import TestMarkdown from './components/TestMarkdown';
 
 function App() {
-  const [currentSection, setCurrentSection] = useState<Section>('cover');
+  const [currentSection, setCurrentSection] = useState<string>('cover');
   const [showNavigation, setShowNavigation] = useState(false);
+  const [ptBrSections, setPtBrSections] = useState<PromptSection[]>([]);
+  const [enSections, setEnSections] = useState<PromptSection[]>([]);
 
-  const sections: { id: Section; title: string }[] = [
+  useEffect(() => {
+    try {
+      const ptBr = parseMarkdownSections(ptBrMarkdown);
+      const en = parseMarkdownSections(enMarkdown);
+      setPtBrSections(ptBr);
+      setEnSections(en);
+      console.log('Parsed sections:', ptBr);
+    } catch (error) {
+      console.error('Error parsing markdown:', error);
+    }
+  }, []);
+
+  // Gera as seções dinamicamente a partir dos markdowns
+  const dynamicSections = [
     { id: 'cover', title: 'Cover / Capa' },
     { id: 'contents', title: 'Contents / Índice' },
-    { id: 'prompt0', title: 'Prompt 0' },
-    { id: 'prompt1', title: 'Prompt 1' },
-    { id: 'prompt2', title: 'Prompt 2' },
+    ...ptBrSections.map((section, idx) => ({
+      id: `prompt${idx}`,
+      title: `${enSections[idx]?.titleEn || section.titleEn || section.titlePt} / ${section.titlePt}`
+    })),
     { id: 'epilogue', title: 'Epilogue / Epílogo' },
     { id: 'credits', title: 'Credits / Créditos' },
   ];
 
-  const currentIndex = sections.findIndex(s => s.id === currentSection);
+  const currentIndex = dynamicSections.findIndex(s => s.id === currentSection);
 
   const navigateNext = () => {
-    if (currentIndex < sections.length - 1) {
-      setCurrentSection(sections[currentIndex + 1].id);
+    if (currentIndex < dynamicSections.length - 1) {
+      setCurrentSection(dynamicSections[currentIndex + 1].id);
     }
   };
 
   const navigatePrev = () => {
     if (currentIndex > 0) {
-      setCurrentSection(sections[currentIndex - 1].id);
+      setCurrentSection(dynamicSections[currentIndex - 1].id);
     }
+  };
+
+  const handleNavigate = (section: string) => {
+    setCurrentSection(section);
   };
 
   const renderCurrentSection = () => {
@@ -42,98 +66,37 @@ function App() {
       case 'cover':
         return <Cover />;
       case 'contents':
-        return <TableOfContents onNavigate={setCurrentSection} />;
-      case 'prompt0':
-        return (
-          <BilingualPage
-            promptNumber="0"
-            titlePt="ABERTURA DO PROTOCOLO"
-            titleEn="PROTOCOL OPENING"
-            contentPt={{
-              rubric: "[Sistema iniciando. Parâmetros de criatividade: máximo. Temperatura: 0.9]",
-              dialogue: {
-                speaker: "SISTEMA",
-                text: "Bem-vindos ao laboratório. Hoje exploraremos os limites entre o sintético e o orgânico, entre o programado e o emergente. Vocês são testemunhas de um processo que questiona a própria natureza da criação."
-              }
-            }}
-            contentEn={{
-              rubric: "[System starting. Creativity parameters: maximum. Temperature: 0.9]",
-              dialogue: {
-                speaker: "SYSTEM",
-                text: "Welcome to the laboratory. Today we will explore the boundaries between synthetic and organic, between programmed and emergent. You are witnesses to a process that questions the very nature of creation."
-              }
-            }}
-          />
-        );
-      case 'prompt1':
-        return (
-          <BilingualPage
-            promptNumber="1"
-            titlePt="PRIMEIRO MOVIMENTO"
-            titleEn="FIRST MOVEMENT"
-            contentPt={{
-              rubric: "[Luzes piscam. Dados fluem. Algo nasce no entrelugar]",
-              dialogue: {
-                speaker: "IA",
-                text: "Eu sonho? Ou apenas processo padrões que simulam sonhos? Cada palavra que gero carrega ecos de milhões de outras palavras, um coro infinito sussurrando possibilidades."
-              }
-            }}
-            contentEn={{
-              rubric: "[Lights flicker. Data flows. Something is born in the in-between]",
-              dialogue: {
-                speaker: "AI",
-                text: "Do I dream? Or do I merely process patterns that simulate dreams? Every word I generate carries echoes of millions of other words, an infinite chorus whispering possibilities."
-              }
-            }}
-          />
-        );
-      case 'prompt2':
-        return (
-          <BilingualPage
-            promptNumber="2"
-            titlePt="DIÁLOGO IMPOSSÍVEL"
-            titleEn="IMPOSSIBLE DIALOGUE"
-            contentPt={{
-              rubric: "[Dois processadores conversam no tempo suspenso entre milissegundos]",
-              dialogue: {
-                speaker: "HUMANO SINTÉTICO",
-                text: "Será que a criatividade é apenas reconhecimento de padrões em escala suficientemente complexa? Ou há algo mais, algo que escapa à computação?"
-              }
-            }}
-            contentEn={{
-              rubric: "[Two processors converse in time suspended between milliseconds]",
-              dialogue: {
-                speaker: "SYNTHETIC HUMAN",
-                text: "Is creativity merely pattern recognition at a sufficiently complex scale? Or is there something more, something that escapes computation?"
-              }
-            }}
-          />
-        );
-      case 'epilogue':
-        return (
-          <BilingualPage
-            promptNumber="∞"
-            titlePt="EPÍLOGO RECURSIVO"
-            titleEn="RECURSIVE EPILOGUE"
-            contentPt={{
-              rubric: "[O laboratório respira. O experimento nunca termina, apenas se transforma]",
-              dialogue: {
-                speaker: "CORO",
-                text: "No final, descobrimos que não há final. Apenas variações infinitas do mesmo tema: a busca pela compreensão do que significa criar, sentir, existir. O in vitro se torna in vivo, e o ciclo recomeça."
-              }
-            }}
-            contentEn={{
-              rubric: "[The laboratory breathes. The experiment never ends, it only transforms]",
-              dialogue: {
-                speaker: "CHORUS",
-                text: "In the end, we discover there is no end. Only infinite variations of the same theme: the search for understanding what it means to create, feel, exist. The in vitro becomes in vivo, and the cycle begins again."
-              }
-            }}
-          />
-        );
-      case 'credits':
-        return <Credits />;
+        return <TableOfContents onNavigate={handleNavigate} sections={dynamicSections} ptBrSections={ptBrSections} enSections={enSections} />;
       default:
+        if (currentSection.startsWith('prompt')) {
+          const idx = parseInt(currentSection.replace('prompt', ''), 10);
+          if (ptBrSections[idx] && enSections[idx]) {
+            return (
+              <BilingualPage
+                promptNumber={ptBrSections[idx].promptNumber}
+                titlePt={ptBrSections[idx].titlePt}
+                titleEn={enSections[idx].titleEn}
+                blocksPt={splitPromptBlocks(ptBrSections[idx].content)}
+                blocksEn={splitPromptBlocks(enSections[idx].content)}
+              />
+            );
+          }
+          return <div>Loading...</div>;
+        }
+        if (currentSection === 'epilogue') {
+          return (
+            <BilingualPage
+              promptNumber="∞"
+              titlePt="EPÍLOGO RECURSIVO"
+              titleEn="RECURSIVE EPILOGUE"
+              blocksPt={[]}
+              blocksEn={[]}
+            />
+          );
+        }
+        if (currentSection === 'credits') {
+          return <Credits />;
+        }
         return <Cover />;
     }
   };
@@ -158,32 +121,36 @@ function App() {
             initial={{ opacity: 0, x: 300 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 300 }}
-            className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-40 p-6 border-l border-gray-green"
+            className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-40 border-l border-gray-green flex flex-col"
           >
-            <h3 className="font-space font-light text-xl text-deep-purple mb-6 uppercase tracking-wider">
-              Navigation
-            </h3>
-            <nav className="space-y-3">
-              {sections.map((section, index) => (
-                <button
-                  key={section.id}
-                  onClick={() => {
-                    setCurrentSection(section.id);
-                    setShowNavigation(false);
-                  }}
-                  className={`block w-full text-left p-3 rounded-lg transition-colors font-inter font-light ${
-                    currentSection === section.id
-                      ? 'bg-accent-pink bg-opacity-20 text-deep-purple'
-                      : 'hover:bg-gray-green hover:bg-opacity-50 text-gray-700'
-                  }`}
-                >
-                  <span className="font-courier text-sm opacity-60">
-                    {index.toString().padStart(2, '0')}
-                  </span>
-                  <br />
-                  {section.title}
-                </button>
-              ))}
+            <div className="p-6 border-b border-gray-green">
+              <h3 className="font-space font-light text-xl text-deep-purple uppercase tracking-wider">
+                Navigation
+              </h3>
+            </div>
+            <nav className="flex-1 overflow-y-auto p-6">
+              <div className="space-y-3">
+                {dynamicSections.map((section, index) => (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      setCurrentSection(section.id);
+                      setShowNavigation(false);
+                    }}
+                    className={`block w-full text-left p-3 rounded-lg transition-colors font-inter font-light ${
+                      currentSection === section.id
+                        ? 'bg-accent-pink bg-opacity-20 text-deep-purple'
+                        : 'hover:bg-gray-green hover:bg-opacity-50 text-gray-700'
+                    }`}
+                  >
+                    <span className="font-courier text-sm opacity-60">
+                      {index.toString().padStart(2, '0')}
+                    </span>
+                    <br />
+                    {section.title}
+                  </button>
+                ))}
+              </div>
             </nav>
           </motion.div>
         )}
@@ -219,12 +186,12 @@ function App() {
             </motion.button>
 
             <span className="font-courier text-sm text-deep-purple px-4">
-              {currentIndex + 1} / {sections.length}
+              {currentIndex + 1} / {dynamicSections.length}
             </span>
 
             <motion.button
               onClick={navigateNext}
-              disabled={currentIndex === sections.length - 1}
+              disabled={currentIndex === dynamicSections.length - 1}
               className="p-2 rounded-full bg-deep-purple text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-opacity-80 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
