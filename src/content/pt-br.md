@@ -1,6 +1,3 @@
-No LLMs were tortured in the making of this dramaturgic text!
-
-
 ## Personagens (em ordem alfabética)
 
 **Ariadna**: Artista transdisciplinar, especialista em ficção especulativa e design de narrativa (visionária, sensível ao subtexto, ambígua de propósito).
@@ -17,11 +14,7 @@ No LLMs were tortured in the making of this dramaturgic text!
 
 
 ## Prompt Zero - Abertura do Protocolo
-<!--
-promptNumber: "00"
-titleEn: "Protocol Opening"
-titlePt: "Abertura do Protocolo"
--->
+
 
 _(Palco com luz suave e difusa, simulando o ambiente cotidiano de um escritório doméstico. Uma mesa com um laptop aberto, uma cadeira giratória ligeiramente fora do lugar. Ao fundo, uma projeção mapeada sugere a interface de uma reunião remota em andamento, com cinco avatares estáticos numa tela escura—ARIADNA, CIRO, MALIK, SAGE, PADILHA, todos com símbolo de vídeo desligado. Vozes abafadas indicam que já há conversa rolando.)_
 

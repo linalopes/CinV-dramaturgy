@@ -21,26 +21,26 @@ export interface LanguageContent {
 }
 
 export function parseMarkdownSections(markdownContent: string): PromptSection[] {
-  // Remove o texto antes do primeiro prompt
+  // Remove text before the first prompt
   const firstPromptIndex = markdownContent.search(/^##\s*\*?Prompt\s*(Zero|\d+)\*?\s*[–-]/m);
   if (firstPromptIndex === -1) return [];
   const contentFromFirstPrompt = markdownContent.substring(firstPromptIndex);
 
-  // Split: cada seção começa com o header do prompt
+  // Split: each section starts with the prompt header
   const rawSections = contentFromFirstPrompt.split(/(?=^##\s*\*?Prompt\s*(Zero|\d+)\*?\s*[–-])/gm).filter(section => section.trim());
-  // Filtra apenas seções que realmente têm header válido
+  // Filter only sections that actually have a valid header
   const sections = rawSections.filter(section => /^##\s*\*?Prompt\s*(Zero|\d+)\*?\s*[–-]/m.test(section));
 
   return sections.map((section, index) => {
-    // Extrai o header e o título de forma robusta
+    // Extract the header and title robustly
     const titleMatch = section.match(/^##\s*\*?Prompt\s*(Zero|\d+)\*?\s*[–-]\s*(.+)$/m);
     if (!titleMatch) {
-      throw new Error('Prompt header inválido ou inesperado: ' + section.slice(0, 80));
+      throw new Error('Invalid or unexpected prompt header: ' + section.slice(0, 80));
     }
     const promptNumber = titleMatch[1] === 'Zero' ? '00' : titleMatch[1].padStart(2, '0');
     const titlePt = titleMatch[2].trim();
 
-    // Extrai o frontmatter se existir (entre <!-- -->)
+    // Extract frontmatter if it exists (between <!-- -->)
     const frontmatterMatch = section.match(/<!--\s*([\s\S]*?)\s*-->/);
     let frontmatter: any = {};
     if (frontmatterMatch) {
@@ -53,13 +53,13 @@ export function parseMarkdownSections(markdownContent: string): PromptSection[] 
       }
     }
 
-    // Extrai personagens das primeiras linhas
+    // Extract characters from the first lines
     const characters = extractCharacters(section);
-    // Extrai contexto das descrições entre parênteses
+    // Extract context from descriptions in parentheses
     const context = extractContext(section);
-    // Identifica speaker principal
+    // Identify main speaker
     const speaker = extractMainSpeaker(section);
-    // Gera rubric baseado no conteúdo
+    // Generate rubric based on content
     const rubric = generateRubric(section);
 
     return {
@@ -88,10 +88,10 @@ function parseFrontmatter(text: string): any {
         // Array
         result[key] = value.slice(1, -1).split(',').map(s => s.trim().replace(/"/g, ''));
       } else if (value.startsWith('"') && value.endsWith('"')) {
-        // String com aspas
+        // String with quotes
         result[key] = value.slice(1, -1);
       } else {
-        // String simples
+        // Simple string
         result[key] = value.trim();
       }
     }
@@ -119,19 +119,19 @@ function extractMainSpeaker(section: string): string {
 }
 
 function generateRubric(section: string): string {
-  // Procura por frases que parecem ser rubricas
+  // Look for sentences that seem to be rubrics
   const rubricMatch = section.match(/\*\*Rubric:\*\*\s*(.+)/);
   if (rubricMatch) {
     return rubricMatch[1].trim();
   }
 
-  // Fallback: primeira frase significativa
+  // Fallback: first meaningful sentence
   const sentences = section.split(/[.!?]/).filter(s => s.trim().length > 20);
   return sentences.length > 0 ? sentences[0].trim() : 'System initializing creativity parameters';
 }
 
 function translateTitle(titlePt: string): string {
-  // Mapeamento simples de títulos
+  // Simple title mapping
   const translations: { [key: string]: string } = {
     'Abertura do Protocolo': 'Protocol Opening',
     'Primeiro Movimento': 'First Movement',
@@ -148,7 +148,7 @@ export type PromptBlock =
   | { type: 'speech'; speaker: string; text: string };
 
 export function splitPromptBlocks(content: string): PromptBlock[] {
-  // Não filtra linhas vazias para preservar parágrafos dentro das falas
+  // Do not filter empty lines to preserve paragraphs inside speeches
   const lines = content.split(/\n/).map(l => l.replace(/\s+$/, ''));
   const blocks: PromptBlock[] = [];
   let currentSpeaker = '';
@@ -156,7 +156,7 @@ export function splitPromptBlocks(content: string): PromptBlock[] {
   let soliloquyPrefix = '';
 
   function pushSpeech() {
-    // Remove linhas em branco do início e fim do buffer, mas preserva entre parágrafos
+    // Remove empty lines from the start and end of the buffer, but preserve them between paragraphs
     while (buffer.length && buffer[0].trim() === '') buffer.shift();
     while (buffer.length && buffer[buffer.length - 1].trim() === '') buffer.pop();
     if (currentSpeaker && buffer.length) {
@@ -169,16 +169,16 @@ export function splitPromptBlocks(content: string): PromptBlock[] {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    // Rubrica solta (linha entre parênteses, com ou sem underscore)
+    // Standalone rubric (line in parentheses, with or without underscore)
     if (/^_?\(.+\)_?$/.test(line.trim())) {
       pushSpeech();
       blocks.push({ type: 'rubric', text: line.trim() });
       currentSpeaker = '';
       continue;
     }
-    // Detecta solilóquio em português ou inglês
+    // Detect soliloquy in Portuguese or English
     const soliloquyMatch = line.match(/^(SOLILÓQUIO|SOLILOQUY)[\s:]+([A-Za-zÀ-ÿ'\- ]+):?\s*(.*)$/i);
-    const soliloquyEnMatch = line.match(/^([A-Za-zÀ-ÿ'\- ]+)'S SOLILOQUY:?\s*(.*)$/i);
+    const soliloquyEnMatch = line.match(/^([A-Za-zÀ-ÿ'\- ]+)'S SOLILOQUY: ?(.*)$/i);
     if (soliloquyMatch) {
       pushSpeech();
       currentSpeaker = soliloquyMatch[2].trim().toUpperCase();
@@ -200,26 +200,45 @@ export function splitPromptBlocks(content: string): PromptBlock[] {
       }
       continue;
     }
-    // Fala: começa com **Personagem**: ou Personagem:
-    const match = line.match(/^\*?\*?([A-Za-zÀ-ÿ0-9'\- ]+)\*?\*?:\s*(.*)$/);
-    if (match) {
+    // Detect speaker (e.g., **NAME**:)
+    const speakerMatch = line.match(/^\*\*([^*]+)\*\*:\s*(.*)$/);
+    if (speakerMatch) {
       pushSpeech();
-      currentSpeaker = match[1].trim().toUpperCase();
-      soliloquyPrefix = '';
-      if (match[2]) {
-        buffer = [match[2]];
-      } else {
-        buffer = [];
-      }
+      currentSpeaker = speakerMatch[1].trim();
+      buffer = [speakerMatch[2]];
       continue;
     }
-    // Linha de fala (continuação ou parágrafo em branco)
-    if (currentSpeaker !== '') {
+    // If inside a speech, accumulate lines
+    if (currentSpeaker) {
       buffer.push(line);
+    } else {
+      // Otherwise, treat as rubric
+      if (line.trim()) {
+        blocks.push({ type: 'rubric', text: line });
+      }
     }
-    // Fallback: ignora
   }
-  // Empurra última fala, se houver
   pushSpeech();
   return blocks;
+}
+
+export function extractCharacterList(markdownContent: string): string | null {
+  // Extracts the entire character block as a string (for legacy or display)
+  const match = markdownContent.match(/^##\s*(Personagens|Characters)[^\n]*\n([\s\S]*?)(?=^##\s|\Z)/m);
+  return match ? match[2].trim() : null;
+}
+
+export function extractCharacterArray(markdownContent: string): { name: string, description: string }[] {
+  // Extracts each character as an object { name, description } from the character block
+  const match = markdownContent.match(/^##\s*(Personagens|Characters)[^\n]*\n([\s\S]*?)(?=^##\s|\Z)/m);
+  if (match) {
+    const lines = (match[2] || '').split('\n');
+    const trimmedLines = lines.map(line => line.trim()).filter(line => line.length > 0);
+    const characters = trimmedLines.map(line => {
+      const m = line.match(/^\*\*([^*]+)\*\*:\s*(.+)$/);
+      return m ? { name: m[1].trim(), description: m[2].trim() } : null;
+    }).filter(Boolean) as { name: string, description: string }[];
+    return characters;
+  }
+  return [];
 }

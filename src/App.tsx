@@ -11,7 +11,6 @@ import { parseMarkdownSections, PromptSection, splitPromptBlocks, PromptBlock } 
 import ptBrMarkdown from './content/pt-br.md?raw';
 // @ts-ignore
 import enMarkdown from './content/en.md?raw';
-import TestMarkdown from './components/TestMarkdown';
 
 function App() {
   const [currentSection, setCurrentSection] = useState<string>('cover');
@@ -31,7 +30,7 @@ function App() {
     }
   }, []);
 
-  // Gera as seções dinamicamente a partir dos markdowns
+  // Dynamically generate sections from markdowns
   const dynamicSections = [
     { id: 'cover', title: 'Cover / Capa' },
     { id: 'contents', title: 'Contents / Índice' },
@@ -45,6 +44,7 @@ function App() {
 
   const currentIndex = dynamicSections.findIndex(s => s.id === currentSection);
 
+  // Navigation handlers
   const navigateNext = () => {
     if (currentIndex < dynamicSections.length - 1) {
       setCurrentSection(dynamicSections[currentIndex + 1].id);
@@ -61,6 +61,7 @@ function App() {
     setCurrentSection(section);
   };
 
+  // Render the current section based on navigation
   const renderCurrentSection = () => {
     switch (currentSection) {
       case 'cover':
@@ -71,6 +72,8 @@ function App() {
         if (currentSection.startsWith('prompt')) {
           const idx = parseInt(currentSection.replace('prompt', ''), 10);
           if (ptBrSections[idx] && enSections[idx]) {
+            // For Prompt Zero, pass raw markdowns as props
+            const extraProps = idx === 0 ? { rawPtBrMarkdown: ptBrMarkdown, rawEnMarkdown: enMarkdown } : {};
             return (
               <BilingualPage
                 promptNumber={ptBrSections[idx].promptNumber}
@@ -78,6 +81,7 @@ function App() {
                 titleEn={enSections[idx].titleEn}
                 blocksPt={splitPromptBlocks(ptBrSections[idx].content)}
                 blocksEn={splitPromptBlocks(enSections[idx].content)}
+                {...extraProps}
               />
             );
           }

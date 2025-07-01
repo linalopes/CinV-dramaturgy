@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import { PromptBlock } from '../utils/markdownParser';
+import { PromptBlock, extractCharacterList, extractCharacterArray } from '../utils/markdownParser';
 
 interface BilingualPageProps {
   promptNumber: string;
@@ -9,6 +9,8 @@ interface BilingualPageProps {
   titleEn: string;
   blocksPt: PromptBlock[];
   blocksEn: PromptBlock[];
+  rawPtBrMarkdown?: string;
+  rawEnMarkdown?: string;
 }
 
 const markdownComponents = {
@@ -24,11 +26,49 @@ const BilingualPage: React.FC<BilingualPageProps> = ({
   titlePt,
   titleEn,
   blocksPt,
-  blocksEn
+  blocksEn,
+  rawPtBrMarkdown,
+  rawEnMarkdown
 }) => {
+  // Extrai a lista de personagens se for o Prompt Zero
+  let characterArrayPt: { name: string, description: string }[] = [];
+  let characterArrayEn: { name: string, description: string }[] = [];
+  if (promptNumber === '00' && rawPtBrMarkdown && rawEnMarkdown) {
+    characterArrayPt = extractCharacterArray(rawPtBrMarkdown);
+    characterArrayEn = extractCharacterArray(rawEnMarkdown);
+  }
   return (
     <div className="min-h-screen px-6 py-12">
       <div className="max-w-7xl mx-auto">
+        {/* Lista de personagens destacada no Prompt Zero */}
+        {characterArrayPt.length > 0 && characterArrayEn.length > 0 && (
+          <div className="mb-12">
+            <div className="flex flex-col md:flex-row md:space-x-8 space-y-6 md:space-y-0">
+              <div className="md:w-1/2 bg-white/80 border-l-4 border-accent-turquoise shadow-md rounded-lg p-6">
+                <h2 className="font-space font-bold text-lg text-accent-turquoise mb-4">Characters (in alphabetical order)</h2>
+                <ul className="space-y-3">
+                  {characterArrayEn.map((char, idx) => (
+                    <li key={idx}>
+                      <span className="font-bold text-accent-turquoise uppercase">{char.name}</span>
+                      <span className="text-gray-700">: {char.description}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="md:w-1/2 bg-white/80 border-l-4 border-accent-pink shadow-md rounded-lg p-6">
+                <h2 className="font-space font-bold text-lg text-accent-pink mb-4">Personagens (em ordem alfabética)</h2>
+                <ul className="space-y-3">
+                  {characterArrayPt.map((char, idx) => (
+                    <li key={idx}>
+                      <span className="font-bold text-accent-pink uppercase">{char.name}</span>
+                      <span className="text-gray-700">: {char.description}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Prompt Header */}
         <motion.div
           className="text-center mb-12"
