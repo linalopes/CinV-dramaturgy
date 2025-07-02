@@ -179,7 +179,7 @@ export const printContent = async (
 export const formatPrintContent = (content: PrintContent, options?: PrintOptions): string => {
   // Definir o CSS dinâmico para orientação e margens
   const pageSize = `${options?.format || 'A5'}${options?.orientation ? ' ' + options.orientation : ''}`;
-  const margin = options?.margin || '15mm';
+  const margin = options?.margin || '0mm'; // Margem zero para a folha inteira
   const bleed = options?.bleed || '0mm';
   const marks = options?.marks ? 'marks: crop;' : '';
   const dynamicPageCSS = `
@@ -202,7 +202,77 @@ export const formatPrintContent = (content: PrintContent, options?: PrintOptions
           color: #22113E;
         }
       }
-      .pagedjs-content { width: 100%; box-sizing: border-box; }
+      body, .pagedjs-content, .print-cover {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box;
+      }
+      .pagedjs-content { width: 100vw; min-height: 100vh; box-sizing: border-box; }
+      .print-cover {
+        width: 100vw;
+        min-height: 100vh;
+        background: url('/main.svg') center center/cover no-repeat;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        gap: 1.2em;
+      }
+      .cover-title-box {
+        background: rgba(34, 17, 62, 0.92);
+        color: #08F2DB;
+        padding: 0.7em 1.5em;
+        border-radius: 0.3em;
+        margin-bottom: 0.5em;
+        text-align: center;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        box-shadow: none;
+      }
+      .cover-title-box h1 {
+        color: #08F2DB;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5em;
+        font-weight: 300;
+        margin: 0 0 0.2em 0;
+        letter-spacing: 0.12em;
+      }
+      .cover-title-box h2 {
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+        font-size: 1.2em;
+        font-weight: 300;
+        margin: 0;
+        letter-spacing: 0.05em;
+        text-transform: none;
+      }
+      .cover-desc-box {
+        background: rgba(34, 17, 62, 0.92);
+        color: #fff;
+        padding: 0.7em 1.5em;
+        border-radius: 0.3em;
+        max-width: 90vw;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95em;
+        font-weight: 300;
+        box-shadow: none;
+        margin-top: 2.5em;
+      }
+      .cover-desc-box p {
+        color: #fff;
+        margin: 0.3em 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95em;
+        font-weight: 300;
+      }
+      .cover-desc-box p + p {
+        margin-top: 1.5em;
+      }
       .print-bilingual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-top: 6mm; }
       .print-column { border-left: 2pt solid; padding-left: 4mm; }
       .print-column.en { border-left-color: #08F2DB; }
@@ -215,16 +285,20 @@ export const formatPrintContent = (content: PrintContent, options?: PrintOptions
     <div class="pagedjs-content">
       <!-- Cover Page -->
       <section class="print-cover">
-        <h1 class="print-cover-title">SYNTHETIC CREATIVITY</h1>
-        <h2 class="print-cover-subtitle">Criatividade Sintética</h2>
-        <p class="print-cover-description">
-          An experimental bilingual publication that explores the boundaries between
-          artificial intelligence and human creativity through dramatic writing.
-        </p>
-        <p class="print-cover-description">
-          Uma publicação experimental bilíngue que explora os limites entre
-          inteligência artificial e criatividade humana através da escrita dramática.
-        </p>
+        <div class="cover-title-box">
+          <h1 class="print-cover-title">SYNTHETIC CREATIVITY</h1>
+          <h2 class="print-cover-subtitle">Criatividade Sintética</h2>
+        </div>
+        <div class="cover-desc-box">
+          <p class="print-cover-description">
+            An experimental bilingual publication that explores the boundaries between
+            artificial intelligence and human creativity through dramatic writing.
+          </p>
+          <p class="print-cover-description">
+            Uma publicação experimental bilíngue que explora os limites entre
+            inteligência artificial e criatividade humana através da escrita dramática.
+          </p>
+        </div>
       </section>
 
       <!-- Table of Contents -->
@@ -293,10 +367,34 @@ export const formatPrintContent = (content: PrintContent, options?: PrintOptions
       <section class="print-credits page-break">
         <h2 class="print-credits-title">Credits | Créditos</h2>
         <div class="print-credits-content">
-          <p>2024 • Laboratory of Creativity <em>in vitro</em></p>
-          <p>An experimental publication exploring the emergent process of AI-human collaboration in dramatic writing.</p>
-          <p>Uma publicação experimental explorando o processo emergente de colaboração IA-humano na escrita dramática.</p>
+          <div class="print-credits-text">
+            <p>An experimental publication exploring the emergent process of AI-human collaboration in dramatic writing.</p>
+            <p>Uma publicação experimental explorando o processo emergente de colaboração IA-humano na escrita dramática.</p>
+          </div>
+          <div style="margin-top:1em; border:1px solid #CAD8D8; border-radius:16px;">
+            <div style="display:flex; flex-wrap:wrap; gap:20px;">
+              <div style="flex:1; min-width:350px;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#EA7DFF; font-weight:700; margin-bottom:4px;">
+                  CONCEIVED BY <br> LINA LOPES AND EDUARDO PADILHA.<br>
+                  WITH PROVOCATIONS BY PEDRO FONSECA.
+                </div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#08F2DB; font-weight:700;">
+                  Writing and Dramaturgy Collaboration: <br> Recy Freire and Raquel Parrine.
+                </div>
+              </div>
+              <div style="flex:1; min-width:350px;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:15px; color:#EA7DFF; font-weight:700; margin-bottom:4px;">
+                  CONCEPÇÃO DE <br>LINA LOPES E EDUARDO PADILHA.<br>
+                  COM PROVOCAÇÕES DE PEDRO FONSECA.
+                </div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#08F2DB; font-weight:700;">
+                  Colaboração em Escrita e Dramaturgia: <br> Recy Freire e Raquel Parrine.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <p class="">2024 • Laboratory of Creativity <em>in vitro</em></p>
       </section>
     </div>
   `;
