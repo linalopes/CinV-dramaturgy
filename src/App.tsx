@@ -5,7 +5,8 @@ import TableOfContents from './components/TableOfContents';
 import BilingualPage from './components/BilingualPage';
 import VisualElements from './components/VisualElements';
 import Credits from './components/Credits';
-import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import PrintLayout from './components/PrintLayout';
+import { ChevronLeft, ChevronRight, Menu, Printer } from 'lucide-react';
 import { parseMarkdownSections, PromptSection, splitPromptBlocks, PromptBlock } from './utils/markdownParser';
 // @ts-ignore
 import ptBrMarkdown from './content/pt-br.md?raw';
@@ -40,6 +41,7 @@ function App() {
     })),
     { id: 'epilogue', title: 'Epilogue / Epílogo' },
     { id: 'credits', title: 'Credits / Créditos' },
+    { id: 'print', title: 'Print Version / Versão Impressa' },
   ];
 
   const currentIndex = dynamicSections.findIndex(s => s.id === currentSection);
@@ -100,6 +102,9 @@ function App() {
         }
         if (currentSection === 'credits') {
           return <Credits />;
+        }
+        if (currentSection === 'print') {
+          return <PrintLayout />;
         }
         return <Cover />;
     }

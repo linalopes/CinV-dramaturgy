@@ -1,0 +1,288 @@
+/* Print Styles for A5 Layout */
+
+@page {
+  size: A5;
+  margin: 15mm;
+  @top-center {
+    content: "Synthetic Creativity | Criatividade Sintética";
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10pt;
+    color: #22113E;
+  }
+  @bottom-center {
+    content: counter(page);
+    font-family: 'Courier Prime', monospace;
+    font-size: 10pt;
+    color: #22113E;
+  }
+}
+
+/* A5 Container */
+.print-container {
+  width: 148mm;
+  height: 210mm;
+  margin: 0 auto;
+  background: white;
+  box-sizing: border-box;
+  padding: 15mm;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: #22113E;
+}
+
+/* Page Breaks */
+.page-break {
+  page-break-before: always;
+}
+
+.avoid-break {
+  page-break-inside: avoid;
+}
+
+/* Typography for Print */
+.print-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24pt;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #22113E;
+  margin-bottom: 8mm;
+  text-align: center;
+}
+
+.print-subtitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14pt;
+  font-weight: 400;
+  color: #22113E;
+  margin-bottom: 6mm;
+}
+
+.print-prompt-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36pt;
+  font-weight: 500;
+  color: #EA7DFF;
+  text-align: center;
+  margin: 8mm 0;
+}
+
+/* Bilingual Layout */
+.print-bilingual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8mm;
+  margin-top: 6mm;
+}
+
+.print-column {
+  border-left: 2pt solid;
+  padding-left: 4mm;
+}
+
+.print-column.en {
+  border-left-color: #08F2DB;
+}
+
+.print-column.pt {
+  border-left-color: #EA7DFF;
+}
+
+/* Character Dialogues */
+.print-speaker {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10pt;
+  font-weight: bold;
+  color: #EA7DFF;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2mm;
+}
+
+.print-speech {
+  font-family: 'Inter', sans-serif;
+  font-size: 11pt;
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 4mm;
+  text-align: justify;
+}
+
+.print-rubric {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9pt;
+  font-style: italic;
+  color: #CAD8D8;
+  border-left: 1pt solid #CAD8D8;
+  padding-left: 3mm;
+  margin: 3mm 0;
+}
+
+/* Character List */
+.print-character-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6mm;
+  margin: 8mm 0;
+  page-break-inside: avoid;
+}
+
+.print-character-section {
+  border-left: 3pt solid;
+  padding-left: 4mm;
+}
+
+.print-character-section.en {
+  border-left-color: #08F2DB;
+}
+
+.print-character-section.pt {
+  border-left-color: #EA7DFF;
+}
+
+.print-character-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12pt;
+  font-weight: bold;
+  margin-bottom: 3mm;
+}
+
+.print-character-title.en {
+  color: #08F2DB;
+}
+
+.print-character-title.pt {
+  color: #EA7DFF;
+}
+
+.print-character-item {
+  margin-bottom: 2mm;
+  font-size: 10pt;
+}
+
+.print-character-name {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Cover Page */
+.print-cover {
+  text-align: center;
+  padding: 20mm 0;
+  page-break-after: always;
+}
+
+.print-cover-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28pt;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #22113E;
+  margin-bottom: 6mm;
+}
+
+.print-cover-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 14pt;
+  font-weight: 300;
+  color: #22113E;
+  margin-bottom: 8mm;
+}
+
+.print-cover-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 11pt;
+  font-weight: 300;
+  color: #22113E;
+  max-width: 100mm;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* Table of Contents */
+.print-toc {
+  page-break-after: always;
+}
+
+.print-toc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18pt;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #22113E;
+  margin-bottom: 8mm;
+  text-align: center;
+}
+
+.print-toc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 3mm;
+  font-size: 11pt;
+}
+
+.print-toc-number {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10pt;
+  color: #EA7DFF;
+  margin-right: 4mm;
+}
+
+.print-toc-text {
+  flex: 1;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+}
+
+.print-toc-page {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10pt;
+  color: #08F2DB;
+}
+
+/* Credits Page */
+.print-credits {
+  text-align: center;
+  padding: 15mm 0;
+}
+
+.print-credits-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18pt;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #22113E;
+  margin-bottom: 8mm;
+}
+
+.print-credits-content {
+  font-family: 'Inter', sans-serif;
+  font-size: 11pt;
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 100mm;
+  margin: 0 auto;
+}
+
+/* Hide web elements in print */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  .print-container {
+    box-shadow: none;
+    border: none;
+  }
+}
